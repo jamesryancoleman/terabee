@@ -7,16 +7,14 @@ import (
 )
 
 func HandleLXL(w http.ResponseWriter, req *http.Request) {
-	log.Printf("terabee/lxl endpoint called:\n%s", req.Body)
-
 	// for testing just print the body.
-	log.Println(req.Body)
+	log.Printf("\"/terabee/lxl\" endpoint called with method %s:\n%s", req.Method, req.Body)
 }
 
 // a default endpoint to confirm receipt of a http-post
 func HandleDefaultEndpoint(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
-	log.Printf("default endpoint called:\n%s", req.Body)
+	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, req.Body)
 }
 
 func main() {
