@@ -3,7 +3,7 @@
 FROM debian:bookworm-slim
 
 RUN apt update
-RUN apt get go docker-cli
+RUN apt get go docker
 
 WORKDIR /terabee
 
