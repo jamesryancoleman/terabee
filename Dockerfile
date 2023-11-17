@@ -9,6 +9,8 @@ WORKDIR /terabee
 
 # Copy the handler server
 COPY util/http/server.go /terabee/
+COPY go.* /terabee/
+
 # Copy the terabee LXL driver image
 COPY Dockerfile /terabee/
 
