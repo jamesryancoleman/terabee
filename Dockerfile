@@ -7,7 +7,7 @@ RUN apt-get -y install golang-go
 
 # Add Docker's official GPG key:
 RUN apt-get update
-RUN apt-get install ca-certificates curl gnupg
+RUN apt-get install -y ca-certificates curl gnupg
 RUN install -m 0755 -d /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
@@ -19,7 +19,7 @@ RUN \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 RUN apt-get update
  
-RUN apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin \
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin \
     docker-compose-plugin
 
 WORKDIR /terabee
