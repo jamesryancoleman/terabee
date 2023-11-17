@@ -2,19 +2,31 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
 
+func ReadBody(req *http.Request) []byte {
+	defer req.Body.Close()
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		panic("error parsing body of request")
+	}
+	return body
+}
+
 func HandleLXL(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
-	log.Printf("\"/terabee/lxl\" endpoint called with method %s:\n%s", req.Method, req.Body)
+	body := ReadBody(req)
+	log.Printf("\"/terabee/lxl\" endpoint called with method %s:\n%s", req.Method, body)
 }
 
 // a default endpoint to confirm receipt of a http-post
 func HandleDefaultEndpoint(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
-	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, req.Body)
+	body := ReadBody(req)
+	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, body)
 }
 
 func main() {
