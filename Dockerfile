@@ -3,7 +3,7 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update
-RUN apt-get -y install go docker
+RUN apt-get -y install golang-go docker
 
 WORKDIR /terabee
 
