@@ -4,6 +4,7 @@ FROM alpine
 
 RUN apk update
 RUN apk add --no-cache git make musl-dev go
+RUN apk add --no-cache docker
 
 WORKDIR /terabee
 
