@@ -3,7 +3,7 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update
-RUN apt-get -y install golang-go docker-ce docker-ce-cli containerd.io
+RUN apt-get -y install golang-go docker-ce
 
 WORKDIR /terabee
 
