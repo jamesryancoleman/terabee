@@ -2,8 +2,8 @@
 
 FROM debian:bookworm-slim
 
-RUN apt update
-RUN apt get go docker
+RUN apt-get update
+RUN apt-get -y install go docker
 
 WORKDIR /terabee
 
