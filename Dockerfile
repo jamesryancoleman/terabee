@@ -13,6 +13,6 @@ COPY util/http/server.go /terabee/
 COPY Dockerfile /terabee/
 
 # Build the go server
-RUN go build server.go
+# RUN go build server.go
 
 # build the docker image locally
