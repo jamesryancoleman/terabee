@@ -33,7 +33,7 @@ func main() {
 	defer cli.Close()
 
 	// pull image from remote repo
-	reader, err := cli.ImagePull(ctx, "docker.io/library/debian:bookwork-slim", types.ImagePullOptions{})
+	reader, err := cli.ImagePull(ctx, "docker.io/library/debian:bookworm-slim", types.ImagePullOptions{})
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +42,7 @@ func main() {
 	io.Copy(os.Stdout, reader)
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: "debian:bookwork-slim",
+		Image: "debian:bookworm-slim",
 		Cmd:   []string{"echo", "hello world"},
 		Tty:   false,
 	}, nil, nil, nil, "")
