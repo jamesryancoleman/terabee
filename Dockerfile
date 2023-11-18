@@ -36,4 +36,4 @@ COPY Dockerfile /terabee/
 RUN go build server.go
 
 # build the docker image locally
-RUN 
+RUN docker build -t terabee .
