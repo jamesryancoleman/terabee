@@ -6,7 +6,6 @@ RUN apt-get update
 RUN apt-get -y install golang-go
 
 # Add Docker's official GPG key:
-RUN apt-get update
 RUN apt-get install -y ca-certificates curl gnupg
 RUN install -m 0755 -d /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -21,7 +20,6 @@ RUN echo \
 RUN apt-get update
  
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io
- # docker-buildx-plugin docker-compose-plugin
 
 WORKDIR /terabee
 
@@ -29,11 +27,10 @@ WORKDIR /terabee
 COPY util/http/server.go /terabee/
 COPY go.* /terabee/
 
-# Copy the terabee LXL driver image
-COPY Dockerfile /terabee/
+# Build the handler server
+RUN go build server.go
 
-# Build the go server
-# RUN go build server.go
-
-# build the docker image locally
+# build the driver image locally
+WORKDIR /terabee/driver
+COPY driver/ /terabee/driver/
 # RUN docker build -t terabee .
