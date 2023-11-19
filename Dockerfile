@@ -34,3 +34,5 @@ RUN go build server.go
 WORKDIR /terabee/driver
 COPY driver/ /terabee/driver/
 # RUN docker build -t terabee .
+
+WORKDIR /terabee
