@@ -36,3 +36,5 @@ COPY driver/ /terabee/driver/
 # RUN docker build -t terabee .
 
 WORKDIR /terabee
+
+ENTRYPOINT [ "server" ]
