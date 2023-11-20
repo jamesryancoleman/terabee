@@ -56,8 +56,10 @@ func RunContainer(img, msg string) {
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: img,
-		Cmd:   []string{"convert/convert_flow", msg, "1"},
-		Tty:   false,
+		Cmd: []string{"convert/convert_flow", msg, "1", "|", "post/post",
+			"http://chaosbox.princeton.edu/frost/v1.1/Observations",
+			"admin", "admin"},
+		Tty: false,
 	}, nil, nil, nil, "")
 	if err != nil {
 		panic(err)
