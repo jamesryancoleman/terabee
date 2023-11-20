@@ -89,7 +89,7 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
 
 	// define handlers
-	http.HandleFunc("/terabee/lxl", HandleLXL)
+	http.HandleFunc("/terabee/flow", HandleFlow)
 	http.HandleFunc("/", HandleDefaultEndpoint)
 
 	// start the server
