@@ -57,9 +57,15 @@ func RunContainer(img, msg string) {
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: img,
 		Cmd: []string{"/bin/sh", "-c",
-			fmt.Sprintf("convert/convert_flow %s 1 | post/post %s admin admin", msg, url)},
+			fmt.Sprintf("convert/convert_flow %s 1 %s", msg, url)},
 		Tty: false,
 	}, nil, nil, nil, "")
+	// resp, err := cli.ContainerCreate(ctx, &container.Config{
+	// 	Image: img,
+	// 	Cmd: []string{"/bin/sh", "-c",
+	// 		fmt.Sprintf("convert/convert_flow %s 1 | post/post %s admin admin", msg, url)},
+	// 	Tty: false,
+	// }, nil, nil, nil, "")
 	if err != nil {
 		panic(err)
 	}
