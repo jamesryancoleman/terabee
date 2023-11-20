@@ -53,12 +53,11 @@ func RunContainer(img, msg string) {
 
 	// defer reader.Close()
 	// io.Copy(os.Stdout, reader)
-
+	dest := "http://chaosbox.princeton.edu/frost/v1.1/Observations"
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: img,
-		Cmd: []string{"convert/convert_flow", msg, "1", "|", "post/post",
-			"http://chaosbox.princeton.edu/frost/v1.1/Observations",
-			"admin", "admin"},
+		Cmd: []string{"/bin/sh", "-c",
+			fmt.Sprintf("convert/convert_flow %s 1 | post/post %s admin admin", msg, dest)},
 		Tty: false,
 	}, nil, nil, nil, "")
 	if err != nil {
