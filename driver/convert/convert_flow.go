@@ -62,7 +62,7 @@ func main() {
 
 	// convert to frost format
 	flowOut := Flow2Frost(flowIn)
-	fmt.Println("convert_flow is sending:")
+	// fmt.Println("convert_flow is sending:")
 	// fmt.Printf("flowOut:\n%+v\n", flowOut)
 	b, _ := json.Marshal(flowOut)
 
