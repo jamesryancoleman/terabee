@@ -26,7 +26,7 @@ func ReadBody(req *http.Request) []byte {
 func HandleFlow(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
 	body := ReadBody(req)
-	log.Printf("\"/terabee/lxl\" endpoint called with method %s:\n%s", req.Method, string(body))
+	log.Printf("\"/terabee/flow\" endpoint called with method %s:\n%s", req.Method, string(body))
 	RunContainer("docker.io/library/terabee", string(body))
 }
 
