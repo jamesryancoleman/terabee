@@ -7,4 +7,4 @@ RUN apt-get -y install golang-go
 
 WORKDIR /terabee/convert
 
-COPY driver/convert/convert_flow.go /terabee/driver/convert/
+COPY ./driver/convert/convert_flow.go /terabee/driver/convert/
