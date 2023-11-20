@@ -11,7 +11,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -31,7 +31,7 @@ func readStdin() string {
 func main() {
 	client := &http.Client{}
 	msg := readStdin()
-	log.Printf("Posting:\n%s\n", msg)
+	fmt.Printf("Posting:\n%s\n", msg)
 	req, _ := http.NewRequest("POST", os.Args[1], bytes.NewBuffer([]byte(msg)))
 	req.Header.Add("Authorization", "Basic "+basicAuth(os.Args[2], os.Args[3]))
 	req.Header.Set("Content-Type", "application/json")
@@ -40,5 +40,5 @@ func main() {
 		panic(err)
 	}
 
-	log.Println("Response Status:", resp.Status)
+	fmt.Println("Response Status:", resp.Status)
 }
