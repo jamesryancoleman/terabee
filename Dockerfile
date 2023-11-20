@@ -28,7 +28,7 @@ COPY util/http/server.go /terabee/
 COPY go.* /terabee/
 
 # Build the handler server
-RUN go install server.go
+RUN go build server.go
 
 # build the driver image locally
 WORKDIR /terabee/driver
@@ -37,4 +37,4 @@ COPY driver/ /terabee/driver/
 
 WORKDIR /terabee
 
-ENTRYPOINT [ "server" ]
+ENTRYPOINT [ "/terabee/handler" ]
