@@ -14,3 +14,5 @@ WORKDIR /terabee/driver/post
 
 COPY post/post.go /terabee/driver/post/
 RUN go build post.go
+
+WORKDIR /terabee/driver
