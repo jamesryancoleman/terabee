@@ -23,10 +23,11 @@ func ReadBody(req *http.Request) []byte {
 	return body
 }
 
-func HandleLXL(w http.ResponseWriter, req *http.Request) {
+func HandleFlow(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
 	body := ReadBody(req)
 	log.Printf("\"/terabee/lxl\" endpoint called with method %s:\n%s", req.Method, string(body))
+	RunContainer("docker.io/library/terabee", string(body))
 }
 
 // a default endpoint to confirm receipt of a http-post
@@ -34,7 +35,6 @@ func HandleDefaultEndpoint(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
 	body := ReadBody(req)
 	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, string(body))
-	RunContainer("docker.io/library/terabee", string(body))
 }
 
 func RunContainer(img, msg string) {
