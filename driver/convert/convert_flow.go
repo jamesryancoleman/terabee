@@ -1,5 +1,10 @@
 package main
 
+/*
+usage:
+		convert_flow RAW_MSG ID
+*/
+
 import (
 	"encoding/json"
 	"fmt"

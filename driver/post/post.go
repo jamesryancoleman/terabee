@@ -1,5 +1,12 @@
 package main
 
+/*
+usage:
+		post URL USR PASSWRD
+
+	STDIN – post reads from stdin to know what message to pass to the server
+*/
+
 import (
 	"bufio"
 	"bytes"
