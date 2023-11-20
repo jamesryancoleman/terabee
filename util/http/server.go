@@ -34,7 +34,7 @@ func HandleDefaultEndpoint(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
 	body := ReadBody(req)
 	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, string(body))
-	RunContainer("debian:bookwork-slim")
+	RunContainer("debian:bookworm-slim")
 }
 
 func RunContainer(img string) {
