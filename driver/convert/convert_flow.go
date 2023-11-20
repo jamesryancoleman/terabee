@@ -58,11 +58,12 @@ func main() {
 	// unmarshall the raw msg
 	flowIn := FlowIn{}
 	json.Unmarshal([]byte(msg), &flowIn)
+	fmt.Printf("%+v\n", flowIn)
 
 	// convert to frost format
 	flowOut := Flow2Frost(flowIn)
 	fmt.Println("convert_flow is sending:")
-	fmt.Println(flowOut)
+	fmt.Printf("%+v\n", flowOut)
 	b, _ := json.Marshal(flowOut)
 
 	fmt.Println(string(b))
