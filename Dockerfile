@@ -37,4 +37,4 @@ COPY driver/ /terabee/driver/
 
 WORKDIR /terabee
 
-ENTRYPOINT [ "/terabee/handler" ]
+ENTRYPOINT [ "/terabee/server" ]
