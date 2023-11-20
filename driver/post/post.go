@@ -28,7 +28,7 @@ func readStdin() string {
 }
 
 func main() {
-
+	fmt.Println("STARTED post...")
 	client := &http.Client{}
 
 	req, _ := http.NewRequest("POST", os.Args[1], bytes.NewBuffer([]byte(readStdin())))
