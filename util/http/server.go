@@ -34,10 +34,10 @@ func HandleDefaultEndpoint(w http.ResponseWriter, req *http.Request) {
 	// for testing just print the body.
 	body := ReadBody(req)
 	log.Printf("\"/\" root endpoint called with method %s:\n%s", req.Method, string(body))
-	RunContainer("debian:bookworm-slim")
+	RunContainer("docker.io/library/terabee", string(body))
 }
 
-func RunContainer(img string) {
+func RunContainer(img, msg string) {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -56,7 +56,7 @@ func RunContainer(img string) {
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: img,
-		Cmd:   []string{"echo", "I was striggered by the webhook and default endpoint"},
+		Cmd:   []string{"convert/convert_flow", msg, "1"},
 		Tty:   false,
 	}, nil, nil, nil, "")
 	if err != nil {
