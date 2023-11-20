@@ -31,7 +31,9 @@ func main() {
 	fmt.Println("STARTED post...")
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("POST", os.Args[1], bytes.NewBuffer([]byte(readStdin())))
+	msg := readStdin()
+	fmt.Printf("post received:\n%s\n", msg)
+	req, _ := http.NewRequest("POST", os.Args[1], bytes.NewBuffer([]byte(msg)))
 	req.Header.Add("Authorization", "Basic "+basicAuth(os.Args[2], os.Args[3]))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
