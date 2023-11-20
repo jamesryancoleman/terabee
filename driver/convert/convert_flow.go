@@ -54,6 +54,7 @@ func Flow2Frost(in FlowIn) FlowFrost {
 func main() {
 	// read the command line arg
 	msg := os.Args[1]
+	fmt.Println(msg)
 
 	// unmarshall the raw msg
 	flowIn := FlowIn{}
