@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -73,12 +74,27 @@ func HandleFlow(w http.ResponseWriter, req *http.Request) {
 	body := ReadBody(req)
 	log.Printf("\"/terabee/flow\" endpoint called with method %s:\n%s", req.Method, string(body))
 
+	// assume flow format and convert to frost AND mortar
+	// FROST-server conversion
+
+	// unmarshall the raw msg
+	flowIn := FlowIn{}
+	json.Unmarshal([]byte(body), &flowIn)
+
+	// convert to frost format
+	flowOut := Flow2Frost(flowIn)
+	frostBytes, _ := json.Marshal(flowOut)
+
+	// credentials
+	frost_url := "http://chaosbox.princeton.edu/frost/v1.1/Observations"
+	frost_user := "write"
+	frost_password := "write"
+
 	// send to frost server
 	client := &http.Client{}
-	msg := readStdin()
-	fmt.Printf("Posting to FROST Server:\n%s\n", msg)
-	req, _ = http.NewRequest("POST", os.Args[1], bytes.NewBuffer([]byte(msg)))
-	req.Header.Add("Authorization", "Basic "+basicAuth(os.Args[2], os.Args[3]))
+	fmt.Printf("Posting to FROST Server:\n%s\n", frostBytes)
+	req, _ = http.NewRequest("POST", frost_url, bytes.NewBuffer(frostBytes))
+	req.Header.Add("Authorization", "Basic "+basicAuth(frost_user, frost_password))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
@@ -86,7 +102,7 @@ func HandleFlow(w http.ResponseWriter, req *http.Request) {
 	}
 
 	fmt.Println("Response Status:", resp.Status)
-	// done frost server
+	// end FROST-server
 
 	// send to local mortar server
 }
