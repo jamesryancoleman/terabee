@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -36,7 +35,7 @@ func Flow2Frost(in FlowIn) FlowFrost {
 	out.TS = time.Unix(in.TS, 0).Format(time.RFC3339)
 	out.RTS = out.TS
 	out.Result = in.Flow.GetOccupancy()
-	out.Stream.Id, _ = strconv.Atoi(os.Args[2])
+	out.Stream.Id = 1
 
 	return out
 }
