@@ -128,8 +128,8 @@ func HandleFlow(w http.ResponseWriter, req *http.Request) {
 
 	// credentials
 	frost_url := "http://chaosbox.princeton.edu/frost/v1.1/Observations"
-	frost_user := "write"
-	frost_password := "write"
+	frost_user := "chaos"
+	frost_password := "Zer0exergy"
 
 	// send to frost server
 	client := &http.Client{}
