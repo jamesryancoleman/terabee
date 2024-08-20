@@ -78,7 +78,7 @@ func ReadCredentials(path string, credPointer *Credentials) error {
 		// set the column names variable
 		ColumnNames = strings.Split(credPointer.PgColumns, ",")
 	}
-	fmt.Printf("%+v\n", *credPointer)
+	// fmt.Printf("%+v\n", *credPointer)
 	return err
 }
 
