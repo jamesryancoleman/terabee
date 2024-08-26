@@ -10,11 +10,40 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	_ "github.com/lib/pq"
 )
+
+// This struct is used to parse credentials from a JSON file
+type Credentials struct {
+	PgAddr     string `json:"pg_addr"`
+	PgUser     string `json:"pg_user"`
+	PgPassword string `json:"pg_password"`
+	PgPort     int    `json:"pg_port"`
+	PgDbName   string `json:"pg_dbname"`
+	PgTable    string `json:"pg_table"`
+	PgColumns  string `json:"column_names"`
+
+	FrostAddr     string `json:"frost_addr"`
+	FrostUser     string `json:"frost_user"`
+	FrostPassword string `json:"frost_password"`
+}
+
+func ReadCredentials(path string, credPointer *Credentials) error {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	err = json.Unmarshal(raw, credPointer)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err
+}
 
 type FlowIn struct {
 	TS     int64       `json:"at"`
@@ -60,16 +89,31 @@ type MortarRow struct {
 	id    int64
 }
 
-func (m *MortarRow) Prepare() []interface{} {
+type TSRow struct {
+	TS    string
+	Value float32
+	Id    string
+}
+
+func (m *TSRow) Prepare() []interface{} {
 	args := make([]interface{}, 3)
 	args[0] = m.TS
-	args[1] = m.value
-	args[2] = m.id
+	args[1] = m.Value
+	args[2] = m.Id
 	return args
 }
 
+// func (m *MortarRow) Prepare() []interface{} {
+// 	args := make([]interface{}, 3)
+// 	args[0] = m.TS
+// 	args[1] = m.value
+// 	args[2] = m.id
+// 	return args
+// }
+
 // globally accessible
 var ctx *PGContext
+var credentials *Credentials
 
 func main() {
 	// start an http server on port
@@ -85,7 +129,14 @@ func main() {
 	dbname := flag.String("db", "data", "name of the database to access")
 	table := flag.String("table", "data", "name of the table to query")
 	colStr := flag.String("cols", "time,value,id", "column names seperated by commas")
+	credPath := flag.String("f", "credentials.json", "location of the credentials json")
 	flag.Parse()
+
+	// parse the credentials from the file
+	err := ReadCredentials(*credPath, credentials)
+	if err != nil {
+		log.Printf(err.Error())
+	}
 
 	// pass context as a PGContext struct
 	ctx = &PGContext{
@@ -139,7 +190,7 @@ func HandleFlow(w http.ResponseWriter, req *http.Request) {
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		log.Printf("unable to post to FROST server: %s", err.Error())
 	}
 
 	fmt.Println("Response Status:", resp.Status)
@@ -147,11 +198,11 @@ func HandleFlow(w http.ResponseWriter, req *http.Request) {
 
 	// send to local mortar server
 	// convert FlowOut to MortarRow
-	PGInsert(MortarRow{
-		TS:    flowOut.TS,
-		value: float32(flowOut.Result),
-		id:    1,
-	})
+	// PGInsert(TSRow{
+	// 	TS:    flowOut.TS,
+	// 	Value: float32(flowOut.Result),
+	// 	Id:    "DO SOMETHING HERE",
+	// })
 
 }
 
@@ -186,10 +237,35 @@ type PGContext struct {
 	colStr   string
 }
 
-func PGInsert(m MortarRow) error {
-	columns := strings.Split(ctx.colStr, ",")
+// func PGInsert(m MortarRow) error {
+// 	columns := strings.Split(ctx.colStr, ",")
+// 	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+// 		ctx.host, ctx.port, ctx.user, ctx.password, ctx.dbname)
+
+// 	// open the database client
+// 	db, err := sql.Open("postgres", conn)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer db.Close()
+
+// 	statement := fmt.Sprintf(`INSERT INTO %s (%s) VALUES (%s)`,
+// 		ctx.table, strings.Join(columns, ", "), PlaceHolders(len(columns)))
+// 	// fmt.Println(statement)
+
+// 	values := m.Prepare()
+// 	_, err = db.Exec(statement, values...)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	return err
+// }
+
+func PGInsert(m TSRow, c *Credentials) error {
+	columns := strings.Split(c.PgColumns, ",")
 	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		ctx.host, ctx.port, ctx.user, ctx.password, ctx.dbname)
+		c.PgAddr, c.PgPort, c.PgUser, c.PgPassword, c.PgDbName)
 
 	// open the database client
 	db, err := sql.Open("postgres", conn)
@@ -198,8 +274,9 @@ func PGInsert(m MortarRow) error {
 	}
 	defer db.Close()
 
+	// compose sql injection statement
 	statement := fmt.Sprintf(`INSERT INTO %s (%s) VALUES (%s)`,
-		ctx.table, strings.Join(columns, ", "), PlaceHolders(len(columns)))
+		c.PgTable, strings.Join(columns, ", "), PlaceHolders(len(columns)))
 	// fmt.Println(statement)
 
 	values := m.Prepare()
